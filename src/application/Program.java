@@ -1,10 +1,10 @@
 package application;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
+import FileManagers.QuestionFileReader;
+import FileManagers.UserFileWrite;
 import user.User;
 
 public class Program {
@@ -13,29 +13,35 @@ public class Program {
         
         Scanner sc = new Scanner(System.in);
 
+        //--Lendo Arquivo--
         //caminho do arquivo
         String path = "C:\\\\studyspace\\\\programming\\\\oriented_programming\\\\sistema de cadastro via CLI\\\\cli_registration_system\\\\options.txt";
-        //lendo e imprimindo arquivo
-        try(BufferedReader br = new BufferedReader(new FileReader(path))){
-            String line = br.readLine();
-            while (line != null) {
-                System.out.println(line);
-                line = br.readLine();
-            }
-        }catch(IOException e){
-            System.out.println("Error: " + e.getMessage());
+        List<String> questions = QuestionFileReader.readQuestionsFromFile(path);
+        for(String q : questions){
+            System.out.println(q);
         }
-
+        
+        //entrada de dados via CLI
         String name = sc.nextLine();
         String email = sc.nextLine();
         int age = sc.nextInt();
         double height = sc.nextDouble();
 
-        User user = new User(name, email, age, height);
+        int indexUser = 0;
+        if (name != null && email != null && age != 0 && height != 0.0) {
+            User user = new User(name, email, age, height);
+            indexUser++;
 
-        System.out.println(user);
+            System.out.println(user);
+
+            UserFileWrite.saveUserToFileTxt(user, indexUser);
+        }
+        
+
+        
+
+        
 
         sc.close();
-
     }
 }
